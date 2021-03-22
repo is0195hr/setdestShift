@@ -19,48 +19,115 @@ int main(void){
     double shift_X = 100;
     double shift_Y = 100;
 
+    //file open check
     if(fp == NULL) {
         printf("%s file not open!\n", inputFilename);
         return -1;
     }
+    else{
+        printf("inputfilename: %s\n",inputFilename);
+    }
+    if(fp2 == NULL) {
+        printf("%s file not open!\n", outputFilename);
+        return -1;
+    }
+    else{
+        printf("outputFilename:%s\n",outputFilename);
+    }
 
     int count = 0;
     int i = 0;
-    char *addr,*addr2;
+    char *addr, *addr2;
     double value = 0;
     while(fgets(str, MAX1LINE, fp) != NULL) {
-        //printf("%d ",count);
-        //printf("%ld ", strlen(str));
+
+
+        //X座標のシフト
+        //setXを探す
         addr = NULL;
         addr = strstr(str,"set X_");
 
         if(addr != NULL) {
-            //printf("%s", addr);
             printf("%d:",count);
             for(i = 0; i < strlen(addr); i++){
                 printf("%c",addr[i]);
             }
-            //X座標のシフト
+            //Xを探す
             addr2 = strchr(addr, (int)'X');
             if(addr2 != NULL){
-                printf("%s",addr2+3);
-                value = atof(addr2+3);
+                printf("%s",addr2 + 3);
+                value = atof(addr2 + 3);
 
                 printf("double:%.12f\n",value);
                 value += shift_X;
 
                 printf("shiftX= %.12f\n",value);
-
+                snprintf(addr2 + 3, 20, "%.13f", value);
                 fprintf(stdout,"%s",str);
-                //fprintf(outputFilename,"")
+                //fprintf(fp2,"%s",str);
+                str[strlen(str)-1] = '\n';
+
+
             }
 
         }
-        for(i = 0; i < strlen(str); i++){
-            //printf("%c",str[i]);
+        addr = NULL;
+        addr = strstr(str,"set Y_");
+        if(addr != NULL) {
+            printf("%d:",count);
+            for(i = 0; i < strlen(addr); i++){
+                printf("%c",addr[i]);
+            }
+            //Xを探す
+            addr2 = strchr(addr, (int)'Y');
+            if(addr2 != NULL){
+                printf("%s",addr2 + 3);
+                value = atof(addr2 + 3);
+
+                printf("double:%.12f\n",value);
+                value += shift_X;
+
+                printf("shiftX= %.12f\n",value);
+                snprintf(addr2 + 3, 20, "%.13f", value);
+                fprintf(stdout,"%s",str);
+                //fprintf(fp2,"%s",str);
+                str[strlen(str)-1] = '\n';
+            }
+
         }
 
-        if(count >=5){
+        addr = NULL;
+        addr = strstr(str,"setdest");
+        if(addr != NULL) {
+/*            printf("%d:",count);
+            for(i = 0; i < strlen(addr); i++){
+                printf("%c",addr[i]);
+            }
+            //Xを探す
+            for(i =)
+            if(addr2 != NULL){
+                printf("%s",addr2 + 3);
+                value = atof(addr2 + 3);
+
+                printf("double:%.12f\n",value);
+                value += shift_X;
+
+                printf("shiftX= %.12f\n",value);
+                snprintf(addr2 + 3, 20, "%.13f", value);
+                fprintf(stdout,"%s",str);
+                //fprintf(fp2,"%s",str);
+                str[strlen(str)-1] = '\n';
+            }*/
+
+        }
+
+
+        //ファイルに出力
+        fprintf(fp2,"%s",str);
+
+
+
+        if(count >=160){
             break;
         }
         count++;
@@ -70,6 +137,6 @@ int main(void){
 
 
     fclose(fp); // ファイルを閉じる
-
+    fclose(fp2);
     return 0;
 }
