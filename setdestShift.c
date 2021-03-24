@@ -39,8 +39,8 @@ int main(void){
     int i = 0;
     char *addr, *addr2;
     double value = 0;
-    while(fgets(str, MAX1LINE, fp) != NULL) {
 
+    while(fgets(str, MAX1LINE, fp) != NULL) {
 
         //X座標のシフト
         //setXを探す
@@ -66,8 +66,6 @@ int main(void){
                 fprintf(stdout,"%s",str);
                 //fprintf(fp2,"%s",str);
                 str[strlen(str)-1] = '\n';
-
-
             }
 
         }
@@ -78,14 +76,14 @@ int main(void){
             for(i = 0; i < strlen(addr); i++){
                 printf("%c",addr[i]);
             }
-            //Xを探す
+            //Yを探す
             addr2 = strchr(addr, (int)'Y');
             if(addr2 != NULL){
                 printf("%s",addr2 + 3);
                 value = atof(addr2 + 3);
 
                 printf("double:%.12f\n",value);
-                value += shift_X;
+                value += shift_Y;
 
                 printf("shiftX= %.12f\n",value);
                 snprintf(addr2 + 3, 20, "%.13f", value);
@@ -99,6 +97,28 @@ int main(void){
         addr = NULL;
         addr = strstr(str,"setdest");
         if(addr != NULL) {
+            printf("start:%s",str);
+
+            value = atof(addr + 8);
+            printf("double:%.12f\n",value);
+            value += shift_X;
+            snprintf(addr + 8, strlen(addr + 8), "%.13f", value);
+
+
+            value = 0;
+            for(i = 8; ;i++){
+                if(addr[i] == ' '){
+                    i++;
+                    break;
+                }
+            }
+            value = atof(addr + i);
+            printf("double:%.12f\n",value);
+            value += shift_Y;
+            snprintf(addr + i, strlen(addr + i), "%.13f", value);
+
+            printf("final:%s",str);
+
 /*            printf("%d:",count);
             for(i = 0; i < strlen(addr); i++){
                 printf("%c",addr[i]);
@@ -121,13 +141,14 @@ int main(void){
 
         }
 
+        printf("\n---\n");
 
         //ファイルに出力
         fprintf(fp2,"%s",str);
 
 
 
-        if(count >=160){
+        if(count >=170){
             break;
         }
         count++;
