@@ -102,22 +102,23 @@ int main(void){
             value = atof(addr + 8);
             printf("double:%.12f\n",value);
             value += shift_X;
-            snprintf(addr + 8, strlen(addr + 8), "%.13f", value);
+            //snprintf(addr + 8, strlen(addr + 8), "%.13f", value);
 
 
             value = 0;
             for(i = 8; ;i++){
+                printf("i:%d %c\n",i,addr[i]);
                 if(addr[i] == ' '){
-                    i++;
+                    printf("correct\n");
                     break;
                 }
             }
             value = atof(addr + i);
             printf("double:%.12f\n",value);
-            value += shift_Y;
-            snprintf(addr + i, strlen(addr + i), "%.13f", value);
+            //value += shift_Y;
+            //snprintf(addr + i, strlen(addr + i), "%.13f", value);
 
-            printf("final:%s",str);
+            //printf("final:%s",str);
 
 /*            printf("%d:",count);
             for(i = 0; i < strlen(addr); i++){
