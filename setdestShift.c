@@ -38,7 +38,9 @@ int main(void){
     int count = 0;
     int i = 0;
     char *addr, *addr2;
+    char *addr_x, *addr_y, *addr_v;
     double value = 0;
+    double value_x = 0, value_y = 0, value_v = 0;
 
     while(fgets(str, MAX1LINE, fp) != NULL) {
 
@@ -96,12 +98,16 @@ int main(void){
 
         addr = NULL;
         addr = strstr(str,"setdest");
+        addr_x = NULL;
+        addr_y = NULL;
         if(addr != NULL) {
             printf("start:%s",str);
+            addr_x = addr + 8;
+            printf("addrX:%s\n",addr_x);
 
-            value = atof(addr + 8);
+            value_x = atof(addr + 8);
             printf("double:%.12f\n",value);
-            value += shift_X;
+            value_x += shift_X;
             //snprintf(addr + 8, strlen(addr + 8), "%.13f", value);
 
 
@@ -110,11 +116,34 @@ int main(void){
                 printf("i:%d %c\n",i,addr[i]);
                 if(addr[i] == ' '){
                     printf("correct\n");
+                    i++;
                     break;
                 }
             }
-            value = atof(addr + i);
+            addr_y = addr + i;
+            printf("addrY:%s\n",addr_y);
+            value_y = atof(addr_y);
             printf("double:%.12f\n",value);
+            value_y += shift_Y;
+
+
+            int xlen = addr_y - addr_x - 1;
+            printf("Xlen:%d\n",xlen);
+
+            for(i = 8 + xlen + 1; ;i++){
+                printf("i:%d %c\n",i,addr[i]);
+                if(addr[i] == ' '){
+                    printf("correct\n");
+                    i++;
+                    break;
+                }
+            }
+            printf("v:%s\n",addr + i);
+            addr_v = addr + i;
+            int ylen = addr_v - addr_y - 1;
+            printf("%s:%d\n",addr_y, ylen);
+
+            printf("%f %f\n",value_x,value_y);
             //value += shift_Y;
             //snprintf(addr + i, strlen(addr + i), "%.13f", value);
 
@@ -162,3 +191,4 @@ int main(void){
     fclose(fp2);
     return 0;
 }
+
