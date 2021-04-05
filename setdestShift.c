@@ -38,7 +38,8 @@ int main(void){
     int count = 0;
     int i = 0;
     char *addr, *addr2;
-    char *adde_front, *addr_x, *addr_y, *addr_v;
+    char *addr_front, *addr_x, *addr_y, *addr_v;
+    char addr_after[MAX1LINE];
     double value = 0;
     double value_x = 0, value_y = 0, value_v = 0;
 
@@ -102,11 +103,12 @@ int main(void){
         addr_y = NULL;
         if(addr != NULL) {
             printf("start:%s",str);
+
             addr_x = addr + 8;
-            printf("addrX:%s\n",addr_x);
+            printf("addrX:%s\n", addr_x);
 
             value_x = atof(addr + 8);
-            printf("value_x:%.12f\n",value_x);
+            printf("value_x:%.12f\n", value_x);
             value_x += shift_X;
             //snprintf(addr + 8, strlen(addr + 8), "%.13f", value);
 
@@ -119,14 +121,14 @@ int main(void){
                 }
             }
             addr_y = addr + i;
-            printf("addrY:%s\n",addr_y);
+            printf("addrY:%s\n", addr_y);
             value_y = atof(addr_y);
-            printf("value_y:%.12f\n",value_y);
+            printf("value_y:%.12f\n", value_y);
             value_y += shift_Y;
 
 
             int xlen = addr_y - addr_x - 1;
-            printf("Xlen:%d\n",xlen);
+            printf("Xlen:%d\n", xlen);
 
             for(i = 8 + xlen + 1; ;i++){
                 if(addr[i] == ' '){
@@ -134,12 +136,24 @@ int main(void){
                     break;
                 }
             }
-            printf("v:%s\n",addr + i);
+            printf("v:%s\n", addr + i);
             addr_v = addr + i;
+            value_v = atof(addr_v);
+
             int ylen = addr_v - addr_y - 1;
             printf("%s:%d\n",addr_y, ylen);
 
-            printf("%f %f\n",value_x,value_y);
+            printf("%f %f %f\n",value_x, value_y, value_v);
+            printf("addr- str %d\n",addr - str);
+            int k = addr-str + 7;
+            printf("%d\n",k);
+            for(i = 0; i < k; i++) {
+                //printf("%c",str[i]);
+               // addr_front[i] = str[i];
+            }
+
+            //printf("after:%s\n",addr_front);
+
             //value += shift_Y;
             //snprintf(addr + i, strlen(addr + i), "%.13f", value);
 
