@@ -38,7 +38,7 @@ int main(void){
     int count = 0;
     int i = 0;
     char *addr, *addr2;
-    char *addr_x, *addr_y, *addr_v;
+    char *adde_front, *addr_x, *addr_y, *addr_v;
     double value = 0;
     double value_x = 0, value_y = 0, value_v = 0;
 
@@ -106,16 +106,14 @@ int main(void){
             printf("addrX:%s\n",addr_x);
 
             value_x = atof(addr + 8);
-            printf("double:%.12f\n",value);
+            printf("value_x:%.12f\n",value_x);
             value_x += shift_X;
             //snprintf(addr + 8, strlen(addr + 8), "%.13f", value);
 
 
             value = 0;
             for(i = 8; ;i++){
-                printf("i:%d %c\n",i,addr[i]);
                 if(addr[i] == ' '){
-                    printf("correct\n");
                     i++;
                     break;
                 }
@@ -123,7 +121,7 @@ int main(void){
             addr_y = addr + i;
             printf("addrY:%s\n",addr_y);
             value_y = atof(addr_y);
-            printf("double:%.12f\n",value);
+            printf("value_y:%.12f\n",value_y);
             value_y += shift_Y;
 
 
@@ -131,9 +129,7 @@ int main(void){
             printf("Xlen:%d\n",xlen);
 
             for(i = 8 + xlen + 1; ;i++){
-                printf("i:%d %c\n",i,addr[i]);
                 if(addr[i] == ' '){
-                    printf("correct\n");
                     i++;
                     break;
                 }
