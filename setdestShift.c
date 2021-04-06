@@ -1,10 +1,21 @@
+/*
+ * NS2のsetdestで作成するシナリオファイルの座標をシフトする
+ * Grid operate directorは削除される
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #define MAX1LINE 256
 
-int main(void){
+int main(int argc, char *argv[]){
+
+    if(argc != 4){
+        fprintf(stderr, "Usage : %s NodeNumShift X-coordinate Y-coordinate\n", argv[0]);
+        return 1;
+
+    }
 
     FILE *fp,*fp2;
     char inputFilename[] = "distcheck";
@@ -16,8 +27,10 @@ int main(void){
     fp = fopen(inputFilename, "r");
     fp2 = fopen(outputFilename, "w");
 
-    double shift_X = 100;
-    double shift_Y = 100;
+    double shift_Node = atoi(argv[1]);
+    double shift_X = atof(argv[2]);
+    double shift_Y = atof(argv[3]);
+
 
     //file open check
     if(fp == NULL) {
@@ -37,17 +50,48 @@ int main(void){
 
     int count = 0;
     int i = 0;
-    char *addr, *addr2;
+    char *addr, *addr2, *addr3;
     char *addr_front, *addr_x, *addr_y, *addr_v;
     char addr_after[MAX1LINE];
     double value = 0;
     double value_x = 0, value_y = 0, value_v = 0;
+    bool isEditFlag;
+    int nodeNum = 0, numLen=0;
+
+    char buf[8];
 
     while(fgets(str, MAX1LINE, fp) != NULL) {
+        isEditFlag = false;
 
-        //X座標のシフト
+
+
+        addr = NULL;
+        addr2 = NULL;
+        addr3 = NULL;
+        addr = strstr(str,"node_(");
+        if(addr != NULL) {
+            printf("%c",addr[6]);
+            addr2 = &addr[6];
+            if(addr2 != NULL){
+                addr3 = strchr(addr2,(int)')');
+                numLen = addr3 - addr2;
+                printf("num length:%d\n",numLen);
+                nodeNum = atoi(addr2);
+                nodeNum += shift_Node;
+                printf("%d\n",nodeNum);
+
+                snprintf(buf, 8, "%d", nodeNum);
+                numLen = strlen(buf);
+                printf("numlen:%d\n",numLen);
+                snprintf(addr2, numLen, "%d", nodeNum);
+            }
+            isEditFlag = true;
+        }
+
+        //初期X座標のシフト
         //setXを探す
         addr = NULL;
+        addr2 = NULL;
         addr = strstr(str,"set X_");
 
         if(addr != NULL) {
@@ -70,8 +114,10 @@ int main(void){
                 //fprintf(fp2,"%s",str);
                 str[strlen(str)-1] = '\n';
             }
-
+            isEditFlag = true;
         }
+
+        //初期Y座標のシフト
         addr = NULL;
         addr = strstr(str,"set Y_");
         if(addr != NULL) {
@@ -94,9 +140,23 @@ int main(void){
                 //fprintf(fp2,"%s",str);
                 str[strlen(str)-1] = '\n';
             }
-
+            isEditFlag = true;
+        }
+        //Zも初期配置しておく
+        addr = NULL;
+        addr = strstr(str,"set Z_");
+        if(addr != NULL) {
+            isEditFlag = true;
         }
 
+        //コメントもコピー
+        addr = NULL;
+        addr = strstr(str,"#");
+        if(addr != NULL) {
+            isEditFlag = true;
+        }
+
+        //シミュレーション開始後setdestのシフト
         addr = NULL;
         addr = strstr(str,"setdest");
         addr_x = NULL;
@@ -147,18 +207,20 @@ int main(void){
 
             snprintf(addr_x, 50, "%f %f %f\"\n", value_x,value_y,value_v);
             printf("@:%s\n",str);
-            fprintf(fp2,"%s",str);
+            //fprintf(fp2,"%s",str);
+            isEditFlag = true;
 
         }
 
         printf("\n---\n");
 
         //ファイルに出力
-        fprintf(fp2,"%s",str);
+        if(isEditFlag == true) {
+            fprintf(fp2, "%s", str);
+        }
 
 
-
-        if(count >=170){
+        if(count >=40){
             break;
         }
         count++;
