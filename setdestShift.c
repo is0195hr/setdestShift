@@ -144,40 +144,10 @@ int main(void){
             printf("%s:%d\n",addr_y, ylen);
 
             printf("%f %f %f\n",value_x, value_y, value_v);
-            printf("addr- str %d\n",addr - str);
-            int k = addr-str + 7;
-            printf("%d\n",k);
-            for(i = 0; i < k; i++) {
-                //printf("%c",str[i]);
-               // addr_front[i] = str[i];
-            }
 
-            //printf("after:%s\n",addr_front);
-
-            //value += shift_Y;
-            //snprintf(addr + i, strlen(addr + i), "%.13f", value);
-
-            //printf("final:%s",str);
-
-/*            printf("%d:",count);
-            for(i = 0; i < strlen(addr); i++){
-                printf("%c",addr[i]);
-            }
-            //Xを探す
-            for(i =)
-            if(addr2 != NULL){
-                printf("%s",addr2 + 3);
-                value = atof(addr2 + 3);
-
-                printf("double:%.12f\n",value);
-                value += shift_X;
-
-                printf("shiftX= %.12f\n",value);
-                snprintf(addr2 + 3, 20, "%.13f", value);
-                fprintf(stdout,"%s",str);
-                //fprintf(fp2,"%s",str);
-                str[strlen(str)-1] = '\n';
-            }*/
+            snprintf(addr_x, 50, "%f %f %f\"\n", value_x,value_y,value_v);
+            printf("@:%s\n",str);
+            fprintf(fp2,"%s",str);
 
         }
 
