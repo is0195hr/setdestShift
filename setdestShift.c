@@ -29,9 +29,9 @@ int main(int argc, char *argv[]){
     fp = fopen(inputFilename, "r");
     fp2 = fopen("temp", "w");
 
-    double shift_Node = atoi(argv[1]);
-    double shift_X = atof(argv[2]);
-    double shift_Y = atof(argv[3]);
+    double shift_Node = atoi(argv[2]);
+    double shift_X = atof(argv[3]);
+    double shift_Y = atof(argv[4]);
 
 
     //file open check
@@ -242,10 +242,14 @@ int main(int argc, char *argv[]){
         addr3 = NULL;
         addr = strstr(str, "node_(");
         if (addr != NULL) {
-            printf("%c", addr[6]);
-            addr2 = &addr[6];
-            
-            printff("%c")
+            printf("---\n");
+            printf("%s",str);
+            printf("%s",addr);
+
+            addr2 = &addr[7];
+            printf("%s",addr2);
+            printf("---\n");
+            // printff("%c")
             if (addr2 != NULL) {
                 addr3 = strchr(addr2, (int) ')');
                 numLen = addr3 - addr2;
@@ -253,6 +257,7 @@ int main(int argc, char *argv[]){
 
                 //")"以降をbuf2にコピー
                 strcpy(buf2,addr3);
+                printf("%s",addr3);
                 printf("%s",buf2);
 
 
@@ -260,13 +265,21 @@ int main(int argc, char *argv[]){
                 //ノード番号を加算
                 nodeNum = atoi(addr2);
                 nodeNum += shift_Node;
-                printf("%d\n", nodeNum);
+                printf("nodeNum:%d\n", nodeNum);
 
                 //加算した後の桁数を求める
-                snprintf(buf, 8, "%d", nodeNum);
-                numLen = strlen(buf);
+                /*snprintf(buf, 8, "%d", nodeNum);
+                numLen = strlen(buf);*/
                 printf("numlen:%d\n", numLen);
-                snprintf(addr2, numLen, "%d", nodeNum);
+                printf("addr2:%s",addr2);
+                printf("addr3:%s",addr3);
+
+                snprintf(addr2, 20, "%d", nodeNum);
+                printf("addr2:%s",addr2);
+                str[strlen(str)-1] = '\n';
+
+                printf("str:%s",str);
+
             }
             isEditFlag = true;
         }
