@@ -11,21 +11,23 @@
 
 int main(int argc, char *argv[]){
 
-    if(argc != 4){
-        fprintf(stderr, "Usage : %s NodeNumShift X-coordinate Y-coordinate\n", argv[0]);
+    if(argc != 5){
+        fprintf(stderr, "Usage : %s inputFileName NodeNumShift X-coordinate Y-coordinate\n", argv[0]);
         return 1;
 
     }
 
-    FILE *fp,*fp2;
-    char inputFilename[] = "distcheck";
+    FILE *fp, *fp2, *fp3;
+    char inputFilename[128];
+    strcpy(inputFilename,argv[1]);
+
     char outputFilename[128];
-    sprintf(outputFilename,"%sout",inputFilename);
+    sprintf(outputFilename,"%s_out",inputFilename);
 
     char str[MAX1LINE];
 
     fp = fopen(inputFilename, "r");
-    fp2 = fopen(outputFilename, "w");
+    fp2 = fopen("temp", "w");
 
     double shift_Node = atoi(argv[1]);
     double shift_X = atof(argv[2]);
@@ -41,11 +43,11 @@ int main(int argc, char *argv[]){
         printf("inputfilename: %s\n",inputFilename);
     }
     if(fp2 == NULL) {
-        printf("%s file not open!\n", outputFilename);
+        printf("temp file not open!\n");
         return -1;
     }
     else{
-        printf("outputFilename:%s\n",outputFilename);
+        printf("temp file open\n");
     }
 
     int count = 0;
@@ -59,34 +61,14 @@ int main(int argc, char *argv[]){
     int nodeNum = 0, numLen=0;
 
     char buf[8];
+    char buf2[MAX1LINE];
 
     while(fgets(str, MAX1LINE, fp) != NULL) {
         isEditFlag = false;
 
 
 
-        addr = NULL;
-        addr2 = NULL;
-        addr3 = NULL;
-        addr = strstr(str,"node_(");
-        if(addr != NULL) {
-            printf("%c",addr[6]);
-            addr2 = &addr[6];
-            if(addr2 != NULL){
-                addr3 = strchr(addr2,(int)')');
-                numLen = addr3 - addr2;
-                printf("num length:%d\n",numLen);
-                nodeNum = atoi(addr2);
-                nodeNum += shift_Node;
-                printf("%d\n",nodeNum);
 
-                snprintf(buf, 8, "%d", nodeNum);
-                numLen = strlen(buf);
-                printf("numlen:%d\n",numLen);
-                snprintf(addr2, numLen, "%d", nodeNum);
-            }
-            isEditFlag = true;
-        }
 
         //初期X座標のシフト
         //setXを探す
@@ -231,6 +213,78 @@ int main(int argc, char *argv[]){
 
     fclose(fp); // ファイルを閉じる
     fclose(fp2);
+
+
+    //node番号を書き換える
+    fp2 = fopen("temp", "r");
+    if(fp2 == NULL) {
+        printf("temp file not open!\n");
+        return -1;
+    }
+    else{
+        printf("temp file open\n");
+    }
+
+    fp3 = fopen(outputFilename, "w");
+    if(fp3 == NULL) {
+        printf("%s file not open!\n", inputFilename);
+        return -1;
+    }
+    else{
+        printf("inputfilename: %s\n",inputFilename);
+    }
+
+    while(fgets(str, MAX1LINE, fp2) != NULL) {
+        isEditFlag = false;
+
+        addr = NULL;
+        addr2 = NULL;
+        addr3 = NULL;
+        addr = strstr(str, "node_(");
+        if (addr != NULL) {
+            printf("%c", addr[6]);
+            addr2 = &addr[6];
+            
+            printff("%c")
+            if (addr2 != NULL) {
+                addr3 = strchr(addr2, (int) ')');
+                numLen = addr3 - addr2;
+                printf("num length:%d\n", numLen);
+
+                //")"以降をbuf2にコピー
+                strcpy(buf2,addr3);
+                printf("%s",buf2);
+
+
+
+                //ノード番号を加算
+                nodeNum = atoi(addr2);
+                nodeNum += shift_Node;
+                printf("%d\n", nodeNum);
+
+                //加算した後の桁数を求める
+                snprintf(buf, 8, "%d", nodeNum);
+                numLen = strlen(buf);
+                printf("numlen:%d\n", numLen);
+                snprintf(addr2, numLen, "%d", nodeNum);
+            }
+            isEditFlag = true;
+        }
+
+        //コメントもコピー
+        addr = NULL;
+        addr = strstr(str,"#");
+        if(addr != NULL) {
+            isEditFlag = true;
+        }
+
+        //ファイルに出力
+        if(isEditFlag == true) {
+            fprintf(fp3, "%s", str);
+        }
+    }
+
+
     return 0;
 }
 
