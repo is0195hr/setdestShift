@@ -203,7 +203,7 @@ int main(int argc, char *argv[]){
 
 
         if(count >=40){
-            break;
+            //break;
         }
         count++;
 
@@ -246,7 +246,7 @@ int main(int argc, char *argv[]){
             printf("%s",str);
             printf("%s",addr);
 
-            addr2 = &addr[7];
+            addr2 = &addr[6];
             printf("%s",addr2);
             printf("---\n");
             // printff("%c")
@@ -274,10 +274,11 @@ int main(int argc, char *argv[]){
                 printf("addr2:%s",addr2);
                 printf("addr3:%s",addr3);
 
-                snprintf(addr2, 20, "%d", nodeNum);
+                snprintf(addr2, 100, "%d%s", nodeNum,buf2);
                 printf("addr2:%s",addr2);
                 str[strlen(str)-1] = '\n';
 
+                printf("\nend\n");
                 printf("str:%s",str);
 
             }
